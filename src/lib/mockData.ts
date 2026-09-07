@@ -1,395 +1,309 @@
-import { subDays } from 'date-fns';
-import type { ContentAnalytics, PlatformData } from '@/src/types/index';
+import type {
+  Category,
+  OnboardingProgress,
+  PayoutStatus,
+  Payout,
+  PointLog,
+  Product,
+  ReferredMember,
+  Tier,
+  Transaction,
+  User,
+} from '@/src/types';
 
-const generateDateRange = (days: number) => {
-  const dates = [];
-  for (let i = days - 1; i >= 0; i--) {
-    dates.push(subDays(new Date(), i).toISOString().split('T')[0]);
-  }
-  return dates;
-};
-
-const generateRandomNumber = (min: number, max: number, variance: number = 0.1) => {
-  const base = Math.floor(Math.random() * (max - min + 1)) + min;
-  const randomVariance = base * variance * (Math.random() - 0.5) * 2;
-  return Math.floor(base + randomVariance);
-};
-
-// Generate 90 days of mock data
-const dates90Days = generateDateRange(90);
-const dates30Days = generateDateRange(30);
-const dates7Days = generateDateRange(7);
-
-// Instagram metrics data
-const generateInstagramMetrics = () => {
-  const baseFollowers = 45000;
-  const data = [];
-  for (let i = 0; i < dates90Days.length; i++) {
-    const growth = generateRandomNumber(50, 200);
-    data.push({
-      date: dates90Days[i],
-      followers: baseFollowers + (i * growth),
-      reach: generateRandomNumber(8000, 15000),
-      impressions: generateRandomNumber(12000, 25000),
-      engagement: generateRandomNumber(1200, 3000),
-      engagementRate: generateRandomNumber(3.5, 8.2, 0.05),
-      saves: generateRandomNumber(100, 500),
-      comments: generateRandomNumber(50, 300),
-      likes: generateRandomNumber(500, 2500),
-    });
-  }
-  return data;
-};
-
-// Facebook metrics data
-const generateFacebookMetrics = () => {
-  const baseFollowers = 38000;
-  const data = [];
-  for (let i = 0; i < dates90Days.length; i++) {
-    const growth = generateRandomNumber(30, 150);
-    data.push({
-      date: dates90Days[i],
-      followers: baseFollowers + (i * growth),
-      reach: generateRandomNumber(6000, 12000),
-      impressions: generateRandomNumber(10000, 20000),
-      engagement: generateRandomNumber(800, 2200),
-      engagementRate: generateRandomNumber(2.5, 7, 0.05),
-      likes: generateRandomNumber(300, 1500),
-      comments: generateRandomNumber(30, 200),
-      shares: generateRandomNumber(20, 150),
-    });
-  }
-  return data;
-};
-
-// YouTube metrics data
-const generateYoutubeMetrics = () => {
-  const baseSubscribers = 28000;
-  const data = [];
-  for (let i = 0; i < dates90Days.length; i++) {
-    const growth = generateRandomNumber(20, 100);
-    data.push({
-      date: dates90Days[i],
-      subscribers: baseSubscribers + (i * growth),
-      views: generateRandomNumber(8000, 25000),
-      watchTime: generateRandomNumber(4000, 12000),
-      avgViewDuration: generateRandomNumber(180, 480),
-      likes: generateRandomNumber(200, 800),
-      comments: generateRandomNumber(20, 150),
-      impressions: generateRandomNumber(15000, 40000),
-    });
-  }
-  return data;
-};
-
-// TikTok metrics data
-const generateTikTokMetrics = () => {
-  const baseFollowers = 52000;
-  const data = [];
-  for (let i = 0; i < dates90Days.length; i++) {
-    const growth = generateRandomNumber(100, 500);
-    data.push({
-      date: dates90Days[i],
-      followers: baseFollowers + (i * growth),
-      videoViews: generateRandomNumber(50000, 250000),
-      likes: generateRandomNumber(2000, 15000),
-      comments: generateRandomNumber(200, 1500),
-      shares: generateRandomNumber(100, 1000),
-      saves: generateRandomNumber(500, 3000),
-      profileViews: generateRandomNumber(5000, 25000),
-    });
-  }
-  return data;
-};
-
-// Website metrics data
-const generateWebsiteMetrics = () => {
-  const data = [];
-  for (let i = 0; i < dates90Days.length; i++) {
-    data.push({
-      date: dates90Days[i],
-      visitors: generateRandomNumber(2000, 8000),
-      sessions: generateRandomNumber(2500, 10000),
-      pageViews: generateRandomNumber(8000, 35000),
-      avgSessionDuration: generateRandomNumber(120, 420),
-      bounceRate: generateRandomNumber(35, 65),
-    });
-  }
-  return data;
-};
-
-// Current platform data
-export const platformData: PlatformData = {
-  instagram: {
-    account: '@kursuskita',
-    followers: 47250,
-    followerGrowth: 1250,
-    reach: 14250,
-    impressions: 24500,
-    engagement: 2840,
-    engagementRate: 6.5,
-    posts: 145,
-    saves: 428,
-    videoViews: 185000,
-  },
-  facebook: {
-    account: 'KursusKita.info',
-    followers: 39850,
-    followerGrowth: 950,
-    reach: 11200,
-    impressions: 19800,
-    engagement: 1920,
-    engagementRate: 5.8,
-    likes: 1200,
-    comments: 420,
-    shares: 180,
-  },
-  youtube: {
-    channel: '@kursuskita1211',
-    followers: 30800,
-    followerGrowth: 650,
-    reach: 32000,
-    impressions: 38500,
-    engagement: 1280,
-    engagementRate: 4.2,
-    videos: 89,
-    watchTime: 8450,
-    avgViewDuration: 325,
-    videoViews: 185000,
-  },
-  tiktok: {
-    account: '@kursuskita',
-    followers: 65250,
-    followerGrowth: 2150,
-    reach: 420000,
-    impressions: 580000,
-    engagement: 42500,
-    engagementRate: 8.5,
-    profileViews: 18500,
-    videoViews: 185000,
-  },
-  website: {
-    visitors: 5420,
-    sessions: 6850,
-    pageViews: 24180,
-    avgSessionDuration: 285,
-    bounceRate: 48,
-  },
-};
-
-// Time series data
-export const instagramMetrics = generateInstagramMetrics();
-export const facebookMetrics = generateFacebookMetrics();
-export const youtubeMetrics = generateYoutubeMetrics();
-export const tiktokMetrics = generateTikTokMetrics();
-export const websiteMetrics = generateWebsiteMetrics();
-
-// Content examples
-export const contentExamples: ContentAnalytics[] = [
+export const tiers: Tier[] = [
   {
-    id: '1',
-    platform: 'instagram',
-    title: 'Tips Belajar Efektif untuk Siswa Baru',
-    contentType: 'Reels',
-    topic: 'Edukasi',
-    date: '2024-08-08',
-    reach: 18500,
-    impressions: 32000,
-    views: 28500,
-    likes: 2850,
-    comments: 425,
-    shares: 180,
-    saves: 520,
-    engagementRate: 9.2,
-    performanceScore: 92,
+    id: 1,
+    name: 'Bronze',
+    price: 99000,
+    commissionRate: 0.2,
+    recruitmentPoints: 50,
+    upgradePointsRequired: 0,
+    hasSourceFileAccess: false,
+    perks: ['Akses File Siap Cetak', 'Komisi Penjualan 20%', 'Dashboard Reseller'],
   },
   {
-    id: '2',
-    platform: 'instagram',
-    title: 'Testimoni Peserta Kursus Sukses',
-    contentType: 'Carousel',
-    topic: 'Testimoni',
-    date: '2024-08-07',
-    reach: 12300,
-    impressions: 21000,
-    views: 18500,
-    likes: 1850,
-    comments: 320,
-    shares: 95,
-    saves: 280,
-    engagementRate: 7.5,
-    performanceScore: 78,
+    id: 2,
+    name: 'Silver',
+    price: 249000,
+    commissionRate: 0.35,
+    recruitmentPoints: 100,
+    upgradePointsRequired: 500,
+    hasSourceFileAccess: false,
+    perks: ['Semua Akses Bronze', 'Komisi Penjualan 35%', 'Poin Rekrutmen 2x Lipat'],
   },
   {
-    id: '3',
-    platform: 'tiktok',
-    title: 'Belajar Coding dalam 60 Detik',
-    contentType: 'Short',
-    topic: 'Coding',
-    date: '2024-08-06',
-    reach: 145000,
-    impressions: 280000,
-    views: 215000,
-    likes: 18500,
-    comments: 2840,
-    shares: 4200,
-    saves: 3850,
-    engagementRate: 12.8,
-    performanceScore: 96,
-  },
-  {
-    id: '4',
-    platform: 'youtube',
-    title: 'Panduan Lengkap Menggunakan Dashboard Analytics',
-    contentType: 'Video',
-    topic: 'Tutorial',
-    date: '2024-08-05',
-    reach: 42000,
-    impressions: 68000,
-    views: 38500,
-    likes: 2100,
-    comments: 180,
-    shares: 65,
-    saves: 0,
-    engagementRate: 5.8,
-    performanceScore: 82,
-  },
-  {
-    id: '5',
-    platform: 'facebook',
-    title: 'Promo Spesial Bulan Agustus',
-    contentType: 'Feed',
-    topic: 'Promosi',
-    date: '2024-08-04',
-    reach: 16500,
-    impressions: 28000,
-    views: 24500,
-    likes: 1250,
-    comments: 280,
-    shares: 150,
-    saves: 0,
-    engagementRate: 5.9,
-    performanceScore: 76,
-  },
-  {
-    id: '6',
-    platform: 'instagram',
-    title: 'Sertifikasi Profesional Tersedia Sekarang',
-    contentType: 'Feed',
-    topic: 'Sertifikasi',
-    date: '2024-08-03',
-    reach: 9800,
-    impressions: 16500,
-    views: 14200,
-    likes: 650,
-    comments: 120,
-    shares: 42,
-    saves: 180,
-    engagementRate: 5.2,
-    performanceScore: 68,
+    id: 3,
+    name: 'Gold',
+    price: 499000,
+    commissionRate: 0.5,
+    recruitmentPoints: 200,
+    upgradePointsRequired: 1500,
+    hasSourceFileAccess: true,
+    perks: ['Semua Akses Silver', 'Komisi Penjualan 50%', 'Akses File Mentahan/Canva/PSD', 'Prioritas Support'],
   },
 ];
 
-// AI Insights (mock generated)
-export const aiInsights = {
-  keyFindings: [
-    'Engagement rate Instagram meningkat 24% dibandingkan periode sebelumnya',
-    'TikTok menjadi platform dengan performa terbaik dengan 12.8% engagement rate',
-    'Konten video pendek menghasilkan engagement 3.2x lebih tinggi dari konten statis',
-    'Peak engagement terjadi antara jam 19:00-21:00 setiap hari',
-    'Audience dari gender perempuan meningkat 15% month-over-month',
-  ],
-  opportunities: [
-    'Tingkatkan frekuensi konten video pendek (TikTok & Reels) yang sedang trend',
-    'Manfaatkan momentum audience perempuan dengan konten yang lebih relevan',
-    'Lakukan collaboration dengan content creator lokal untuk memperluas reach',
-    'Optimasi posting time ke jam-jam prime time (19:00-21:00)',
-    'Ekspansi ke platform YouTube Shorts untuk mengkapitalisasi trend short-form content',
-  ],
-  risks: [
-    'Engagement rate Facebook menurun 8% - perlu strategi konten refresh',
-    'Website bounce rate tinggi (48%) - perlu UX improvement',
-    'Sentiment negatif dari komentary tentang customer service meningkat 12%',
-    'Competitor engagement rate lebih tinggi di platform Instagram',
-  ],
-  recommendations: [
-    'Prioritaskan produksi konten video pendek (15-30 detik) untuk semua platform',
-    'Implementasikan live streaming mingguan di Instagram & Facebook untuk engagement interaktif',
-    'Buat konten FAQ berbasis komentary paling sering dari audience',
-    'A/B testing caption dan hashtag untuk optimasi reach',
-    'Alokasikan budget iklan lebih besar ke TikTok & Reels',
-  ],
-  nextContentIdeas: [
-    'Series Tutorial: "Skill Baru dalam 5 Menit"',
-    'User Generated Content Campaign: "Kisah Sukses Saya Belajar di Kursuskita"',
-    'Behind The Scenes: "Hari Biasa Tim Kursuskita"',
-    'Interactive Quiz: "Kursus Apa yang Cocok untuk Anda?"',
-    'Comparison Content: "Sebelum & Sesudah Mengikuti Kursus"',
-  ],
+export const currentUser: User = {
+  id: 1,
+  name: 'Rizky Ramadhan',
+  email: 'rizky.ramadhan@example.com',
+  tierId: 1,
+  referredBy: null,
+  referralCode: 'rizkyr',
+  commissionBalance: 500000,
+  accumulatedPoints: 750,
+  totalSales: 2500000,
+  createdAt: '2026-06-12T08:00:00Z',
 };
 
-// Sentiment analysis mock data
-export const sentimentData = {
-  positive: 72,
-  neutral: 18,
-  negative: 10,
-  topicsDiscussed: [
-    'Kualitas materi pembelajaran',
-    'Instruktur berkualitas',
-    'Harga terjangkau',
-    'Sertifikat yang diakui',
-    'Fleksibilitas jadwal',
-  ],
-  frequentQuestions: [
-    'Berapa lama durasi kursus?',
-    'Apakah ada jaminan uang kembali?',
-    'Bisakah belajar offline?',
-    'Sertifikat diakui industri?',
-  ],
-  topPositiveComments: [
-    '"Materi sangat detail dan mudah dipahami! Recommended untuk semua orang 👍"',
-    '"Instruktur sangat responsif, banyak membantu. 5 stars!"',
-    '"Sudah mendapat pekerjaan baru setelah mengikuti kursus ini, terima kasih!"',
-  ],
-  potentialIssues: [
-    'Beberapa user mengeluh tentang kecepatan loading website',
-    'Masalah akses materi untuk subscriber baru belum resolved',
-    'Respons customer service lambat pada waktu prime time',
-  ],
-};
+export const categories: Category[] = [
+  { id: 1, name: 'Planner', slug: 'planner' },
+  { id: 2, name: 'Sticker', slug: 'sticker' },
+  { id: 3, name: 'Wallpaper', slug: 'wallpaper' },
+];
 
-// Campaign data
-export const campaignData = [
+export const products: Product[] = [
   {
-    id: 'campaign-1',
-    name: 'Program Beasiswa Agustus 2024',
-    startDate: '2024-08-01',
-    endDate: '2024-08-31',
-    objective: 'Meningkatkan enrollment peserta baru',
-    platforms: ['instagram', 'facebook', 'tiktok', 'youtube'],
-    contentPublished: 42,
-    reach: 185000,
-    impressions: 520000,
-    engagement: 28500,
-    engagementRate: 8.2,
-    followerGrowth: 1850,
-    websiteTraffic: 4250,
-    performanceScore: 88,
+    id: 1,
+    categoryId: 1,
+    title: 'Minimalist 2026 Monthly Planner',
+    basePrice: 35000,
+    thumbnailUrl: 'from-slate-200 to-slate-400',
+    fileAssetUrl: '/assets/products/minimalist-2026-planner.pdf',
+    sourceFileUrl: '/assets/sources/minimalist-2026-planner.psd',
+    promotionalMaterialUrl: '/assets/promo/minimalist-2026-planner-mockup.zip',
+    tierRequiredForSource: 'Gold',
   },
   {
-    id: 'campaign-2',
-    name: 'Flash Sale Kursus Premium',
-    startDate: '2024-08-15',
-    endDate: '2024-08-22',
-    objective: 'Meningkatkan penjualan kursus premium',
-    platforms: ['instagram', 'tiktok'],
-    contentPublished: 28,
-    reach: 125000,
-    impressions: 380000,
-    engagement: 18500,
-    engagementRate: 6.8,
-    followerGrowth: 950,
-    websiteTraffic: 2850,
-    performanceScore: 82,
+    id: 2,
+    categoryId: 2,
+    title: 'Cute Animal Printable Stickers',
+    basePrice: 15000,
+    thumbnailUrl: 'from-amber-100 to-orange-200',
+    fileAssetUrl: '/assets/products/cute-animal-stickers.pdf',
+    sourceFileUrl: '/assets/sources/cute-animal-stickers.psd',
+    promotionalMaterialUrl: '/assets/promo/cute-animal-stickers-mockup.zip',
+    tierRequiredForSource: 'Gold',
+  },
+  {
+    id: 3,
+    categoryId: 3,
+    title: 'Abstract Waves Mobile Wallpaper',
+    basePrice: 12000,
+    thumbnailUrl: 'from-indigo-300 to-purple-400',
+    fileAssetUrl: '/assets/products/abstract-waves-wallpaper.zip',
+    sourceFileUrl: '/assets/sources/abstract-waves-wallpaper.psd',
+    promotionalMaterialUrl: '/assets/promo/abstract-waves-wallpaper-mockup.zip',
+    tierRequiredForSource: 'Gold',
+  },
+  {
+    id: 4,
+    categoryId: 1,
+    title: 'Aesthetic Weekly Study Planner',
+    basePrice: 29000,
+    thumbnailUrl: 'from-teal-200 to-emerald-300',
+    fileAssetUrl: '/assets/products/aesthetic-weekly-study-planner.pdf',
+    sourceFileUrl: '/assets/sources/aesthetic-weekly-study-planner.psd',
+    promotionalMaterialUrl: '/assets/promo/aesthetic-weekly-study-planner-mockup.zip',
+    tierRequiredForSource: 'Gold',
+  },
+  {
+    id: 5,
+    categoryId: 2,
+    title: 'Motivational Quotes Sticker Pack',
+    basePrice: 18000,
+    thumbnailUrl: 'from-rose-200 to-pink-300',
+    fileAssetUrl: '/assets/products/motivational-quotes-stickers.pdf',
+    sourceFileUrl: '/assets/sources/motivational-quotes-stickers.psd',
+    promotionalMaterialUrl: '/assets/promo/motivational-quotes-stickers-mockup.zip',
+    tierRequiredForSource: 'Gold',
+  },
+  {
+    id: 6,
+    categoryId: 3,
+    title: 'Minimal Boho Desktop Wallpaper',
+    basePrice: 14000,
+    thumbnailUrl: 'from-orange-200 to-amber-300',
+    fileAssetUrl: '/assets/products/minimal-boho-wallpaper.zip',
+    sourceFileUrl: '/assets/sources/minimal-boho-wallpaper.psd',
+    promotionalMaterialUrl: '/assets/promo/minimal-boho-wallpaper-mockup.zip',
+    tierRequiredForSource: 'Gold',
+  },
+];
+
+export const transactions: Transaction[] = [
+  {
+    id: 1,
+    transactionCode: 'TRX-20260901-001',
+    userId: 1,
+    productId: 1,
+    type: 'sale',
+    amount: 35000,
+    commissionEarned: 7000,
+    paymentStatus: 'paid',
+    createdAt: '2026-09-01T09:15:00Z',
+  },
+  {
+    id: 2,
+    transactionCode: 'TRX-20260902-002',
+    userId: 1,
+    productId: 4,
+    type: 'sale',
+    amount: 29000,
+    commissionEarned: 5800,
+    paymentStatus: 'paid',
+    createdAt: '2026-09-02T14:20:00Z',
+  },
+  {
+    id: 3,
+    transactionCode: 'TRX-20260903-003',
+    userId: 1,
+    productId: 2,
+    type: 'sale',
+    amount: 15000,
+    commissionEarned: 3000,
+    paymentStatus: 'paid',
+    createdAt: '2026-09-03T10:05:00Z',
+  },
+  {
+    id: 4,
+    transactionCode: 'TRX-20260905-004',
+    userId: 1,
+    productId: null,
+    type: 'recruitment',
+    amount: 0,
+    commissionEarned: 0,
+    paymentStatus: 'paid',
+    createdAt: '2026-09-05T11:40:00Z',
+  },
+  {
+    id: 5,
+    transactionCode: 'TRX-20260906-005',
+    userId: 1,
+    productId: 6,
+    type: 'sale',
+    amount: 14000,
+    commissionEarned: 2800,
+    paymentStatus: 'pending',
+    createdAt: '2026-09-06T18:00:00Z',
+  },
+];
+
+export const pointLogs: PointLog[] = [
+  {
+    id: 1,
+    userId: 1,
+    points: 500,
+    type: 'recruitment',
+    description: 'Rekrut reseller baru: Rizky Marhow',
+    createdAt: '2026-08-20T10:00:00Z',
+  },
+  {
+    id: 2,
+    userId: 1,
+    points: 150,
+    type: 'sale',
+    description: 'Bonus poin dari 3 transaksi penjualan',
+    createdAt: '2026-08-28T13:30:00Z',
+  },
+  {
+    id: 3,
+    userId: 1,
+    points: 50,
+    type: 'recruitment',
+    description: 'Rekrut reseller baru: Salsa Amelia',
+    createdAt: '2026-09-01T09:00:00Z',
+  },
+  {
+    id: 4,
+    userId: 1,
+    points: 50,
+    type: 'bonus',
+    description: 'Bonus onboarding checklist selesai',
+    createdAt: '2026-09-04T08:00:00Z',
+  },
+];
+
+export const payouts: Payout[] = [
+  {
+    id: 1,
+    userId: 1,
+    amount: 250000,
+    bankName: 'BCA',
+    accountNumber: '1234567890',
+    status: 'completed' as PayoutStatus,
+    createdAt: '2026-08-15T10:00:00Z',
+  },
+  {
+    id: 2,
+    userId: 1,
+    amount: 500000,
+    bankName: 'BCA',
+    accountNumber: '1234567890',
+    status: 'processing' as PayoutStatus,
+    createdAt: '2026-09-05T10:00:00Z',
+  },
+];
+
+export const onboardingProgress: OnboardingProgress = {
+  id: 1,
+  userId: 1,
+  profileCompleted: true,
+  videoWatched: true,
+  materialDownloaded: true,
+  mayarLinkCreated: false,
+  firstShareDone: false,
+};
+
+export const referredMembers: ReferredMember[] = [
+  {
+    id: 2,
+    name: 'Rizky Marhow',
+    tierName: 'Bronze',
+    joinedAt: '2026-08-20T10:00:00Z',
+    pointsGenerated: 500,
+  },
+  {
+    id: 3,
+    name: 'Salsa Amelia',
+    tierName: 'Bronze',
+    joinedAt: '2026-09-01T09:00:00Z',
+    pointsGenerated: 50,
+  },
+  {
+    id: 4,
+    name: 'Dimas Prasetyo',
+    tierName: 'Silver',
+    joinedAt: '2026-07-10T09:00:00Z',
+    pointsGenerated: 100,
+  },
+];
+
+export const faqs = [
+  {
+    question: 'Apa bedanya Tier Bronze, Silver, dan Gold?',
+    answer:
+      'Setiap tier menentukan besaran komisi penjualan dan poin rekrutmen yang kamu dapatkan. Bronze mendapat komisi 20%, Silver 35%, dan Gold 50%. Semakin tinggi tier, semakin besar komisi dan akses filenya — Gold juga mendapat akses file mentahan (Canva/PSD).',
+  },
+  {
+    question: 'Bagaimana cara mencairkan komisi?',
+    answer:
+      'Buka menu Dompet & Poin, lalu klik "Ajukan Pencairan". Masukkan nominal, nama bank, dan nomor rekening kamu. Pencairan akan diproses dalam 1-3 hari kerja.',
+  },
+  {
+    question: 'Bolehkah saya mengedit desain produk?',
+    answer:
+      'Untuk reseller Bronze dan Silver, kamu hanya mendapatkan file siap cetak (tidak bisa diedit). Reseller Gold mendapat akses file mentahan (Canva/PSD) sehingga bisa melakukan kustomisasi desain.',
+  },
+  {
+    question: 'Bagaimana cara upgrade tier?',
+    answer:
+      'Upgrade tier bisa dilakukan otomatis melalui akumulasi poin dari hasil rekrutmen reseller baru dan penjualan — tanpa perlu membayar tunai. Silver butuh 500 poin, Gold butuh 1500 poin.',
+  },
+  {
+    question: 'Apa itu link referral dan bagaimana cara pakainya?',
+    answer:
+      'Link referral adalah link unik kamu untuk mengajak orang lain menjadi reseller. Setiap orang yang mendaftar lewat link kamu akan otomatis menambah poin ke akunmu.',
   },
 ];

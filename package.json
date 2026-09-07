@@ -1,7 +1,7 @@
 {
-  "name": "dashboard-media-sosial",
+  "name": "asetdigital-reseller-dashboard",
   "version": "1.0.0",
-  "description": "Dashboard Media Sosial Direktorat Kursus dan Pelatihan",
+  "description": "Dashboard Reseller Platform Aset Digital (Printable Planner, Sticker, Wallpaper)",
   "private": true,
   "scripts": {
     "dev": "next dev",

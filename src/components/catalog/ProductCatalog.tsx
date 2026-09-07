@@ -1,0 +1,162 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+import { Check, Copy, Download, Filter, Image as ImageIcon, Link as LinkIcon } from 'lucide-react';
+import { categories, currentUser, products } from '@/src/lib/mockData';
+import { formatCurrency } from '@/src/lib/utils';
+import type { Product, ProductCategorySlug } from '@/src/types';
+
+const filters: { label: string; value: ProductCategorySlug | 'all' }[] = [
+  { label: 'All', value: 'all' },
+  { label: 'Planner', value: 'planner' },
+  { label: 'Sticker', value: 'sticker' },
+  { label: 'Wallpaper', value: 'wallpaper' },
+];
+
+function useAffiliateLink(product: Product) {
+  const [copied, setCopied] = useState(false);
+  const affiliateLink = `mayar.id/${product.id}-${product.title
+    .toLowerCase()
+    .split(' ')
+    .slice(0, 3)
+    .join('-')}?ref=${currentUser.referralCode}`;
+
+  const handleGenerateLink = async () => {
+    try {
+      await navigator.clipboard.writeText(affiliateLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  return { copied, handleGenerateLink };
+}
+
+function ProductCard({ product }: { product: Product }) {
+  const { copied, handleGenerateLink } = useAffiliateLink(product);
+  const category = categories.find((c) => c.id === product.categoryId);
+
+  return (
+    <div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-card">
+      <div className={`flex aspect-[4/3] items-center justify-center bg-gradient-to-br ${product.thumbnailUrl}`}>
+        <ImageIcon className="text-white/70" size={36} strokeWidth={1.5} />
+      </div>
+      <div className="flex flex-1 flex-col gap-2.5 p-4">
+        <span className="w-fit rounded-full bg-teal-100 px-2 py-0.5 text-[11px] font-semibold text-teal-700">
+          {category?.name}
+        </span>
+        <h4 className="line-clamp-2 text-sm font-semibold text-ink">{product.title}</h4>
+        <p className="text-sm font-bold text-orange-600">{formatCurrency(product.basePrice)}</p>
+
+        <div className="mt-1 flex flex-col gap-2">
+          <button className="flex items-center justify-center gap-1.5 rounded-lg bg-teal-600 px-3 py-2 text-xs font-semibold text-white hover:bg-teal-700">
+            <Download size={14} /> Download Aset
+          </button>
+          <button className="flex items-center justify-center gap-1.5 rounded-lg border border-teal-200 px-3 py-2 text-xs font-semibold text-teal-700 hover:bg-surface-alt">
+            <ImageIcon size={14} /> Download Mockup
+          </button>
+          <button
+            onClick={handleGenerateLink}
+            className="flex items-center justify-center gap-1.5 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-xs font-semibold text-orange-600 hover:bg-orange-100"
+          >
+            {copied ? <Check size={14} /> : <LinkIcon size={14} />}
+            {copied ? 'Link Tersalin' : 'Generator Link Afiliasi'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductRow({ product }: { product: Product }) {
+  const { copied, handleGenerateLink } = useAffiliateLink(product);
+  const category = categories.find((c) => c.id === product.categoryId);
+
+  return (
+    <div className="flex gap-3 rounded-xl bg-surface p-3">
+      <div
+        className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${product.thumbnailUrl}`}
+      >
+        <ImageIcon className="text-white/70" size={22} strokeWidth={1.5} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <span className="w-fit rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-semibold text-teal-700">
+          {category?.name}
+        </span>
+        <h4 className="mt-1 truncate text-sm font-semibold text-ink">{product.title}</h4>
+        <p className="text-sm font-bold text-orange-600">{formatCurrency(product.basePrice)}</p>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          <button className="flex items-center gap-1 rounded-lg bg-teal-600 px-2.5 py-1.5 text-[11px] font-semibold text-white hover:bg-teal-700">
+            <Download size={12} /> Aset
+          </button>
+          <button className="flex items-center gap-1 rounded-lg border border-teal-200 px-2.5 py-1.5 text-[11px] font-semibold text-teal-700 hover:bg-surface-alt">
+            <ImageIcon size={12} /> Mockup
+          </button>
+          <button
+            onClick={handleGenerateLink}
+            className="flex items-center gap-1 rounded-lg border border-orange-200 bg-orange-50 px-2.5 py-1.5 text-[11px] font-semibold text-orange-600 hover:bg-orange-100"
+          >
+            {copied ? <Check size={12} /> : <LinkIcon size={12} />}
+            {copied ? 'Tersalin' : 'Link Afiliasi'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function ProductCatalog({ compact = false }: { compact?: boolean }) {
+  const [filter, setFilter] = useState<ProductCategorySlug | 'all'>('all');
+
+  const filteredProducts = useMemo(() => {
+    const list =
+      filter === 'all'
+        ? products
+        : products.filter((p) => {
+            const category = categories.find((c) => c.id === p.categoryId);
+            return category?.slug === filter;
+          });
+    return compact ? list.slice(0, 3) : list;
+  }, [filter, compact]);
+
+  return (
+    <div className="rounded-2xl bg-white p-5 shadow-card sm:p-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h3 className="text-base font-bold text-ink sm:text-lg">Katalog Produk Printable</h3>
+        <button className="flex items-center gap-1.5 rounded-lg border border-teal-100 px-3 py-1.5 text-xs font-semibold text-ink-light hover:bg-surface-alt">
+          <Filter size={14} /> Filter
+        </button>
+      </div>
+
+      <div className="mb-4 flex gap-1 overflow-x-auto rounded-xl bg-surface-alt p-1">
+        {filters.map(({ label, value }) => (
+          <button
+            key={value}
+            onClick={() => setFilter(value)}
+            className={`shrink-0 rounded-lg px-4 py-1.5 text-xs font-semibold transition-colors sm:text-sm ${
+              filter === value ? 'bg-teal-600 text-white shadow-card' : 'text-ink-light hover:text-ink'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {compact ? (
+        <div className="space-y-3">
+          {filteredProducts.map((product) => (
+            <ProductRow key={product.id} product={product} />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
