@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 import { Bell, Menu, ChevronDown, LogOut, UserCircle, Search } from 'lucide-react';
 import { useDashboardStore } from '@/src/lib/store';
 import { currentUser, tiers } from '@/src/lib/mockData';
@@ -17,9 +18,14 @@ const titles: Record<NavKey, { title: string; subtitle: string }> = {
 
 export default function Header() {
   const { activeNav, toggleSidebar } = useDashboardStore();
+  const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
   const tier = tiers.find((t) => t.id === currentUser.tierId);
   const { title, subtitle } = titles[activeNav];
+
+  const displayName = session?.user?.name ?? currentUser.name;
+  const displayEmail = session?.user?.email ?? currentUser.email;
+  const avatarImage = session?.user?.image ?? undefined;
 
   return (
     <header className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-teal-900/5 bg-white/90 px-4 py-4 backdrop-blur-md sm:px-8">
@@ -59,11 +65,16 @@ export default function Header() {
             onClick={() => setMenuOpen((v) => !v)}
             className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 hover:bg-surface-alt"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-teal-400 to-teal-600 text-sm font-semibold text-white">
-              {currentUser.name.charAt(0)}
-            </div>
+            {avatarImage ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={avatarImage} alt={displayName} className="h-8 w-8 rounded-full object-cover" />
+            ) : (
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-teal-400 to-teal-600 text-sm font-semibold text-white">
+                {displayName.charAt(0)}
+              </div>
+            )}
             <span className="hidden text-sm font-medium text-ink sm:block">
-              {currentUser.name.split(' ')[0]}
+              {displayName.split(' ')[0]}
             </span>
             <ChevronDown size={16} className="hidden text-ink-light sm:block" />
           </button>
@@ -71,8 +82,8 @@ export default function Header() {
           {menuOpen && (
             <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-teal-900/5 bg-white p-2 shadow-card-lg">
               <div className="border-b border-teal-900/5 px-3 py-2">
-                <p className="text-sm font-semibold text-ink">{currentUser.name}</p>
-                <p className="truncate text-xs text-ink-light">{currentUser.email}</p>
+                <p className="text-sm font-semibold text-ink">{displayName}</p>
+                <p className="truncate text-xs text-ink-light">{displayEmail}</p>
                 <span className="mt-1.5 inline-block rounded-full bg-teal-100 px-2 py-0.5 text-[11px] font-semibold text-teal-700">
                   {tier?.name} Reseller
                 </span>
@@ -80,7 +91,10 @@ export default function Header() {
               <button className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-ink-light hover:bg-surface-alt">
                 <UserCircle size={16} /> Profil Saya
               </button>
-              <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-orange-600 hover:bg-orange-50">
+              <button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-orange-600 hover:bg-orange-50"
+              >
                 <LogOut size={16} /> Keluar
               </button>
             </div>

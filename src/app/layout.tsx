@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import AuthSessionProvider from '@/src/components/providers/AuthSessionProvider';
 
 export const metadata: Metadata = {
-  title: 'AsetDigital | Dashboard Reseller',
-  description: 'Dashboard reseller untuk platform aset digital printable (Planner, Sticker, Wallpaper).',
+  title: 'AsetDigital | Platform Reseller Aset Digital',
+  description: 'Jadi reseller printable digital (Planner, Sticker, Wallpaper) dan dapatkan komisi hingga 50%.',
 };
 
 export default function RootLayout({
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className="bg-surface">
-        {children}
+        <AuthSessionProvider>{children}</AuthSessionProvider>
       </body>
     </html>
   );
