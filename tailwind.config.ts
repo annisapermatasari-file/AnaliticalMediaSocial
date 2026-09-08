@@ -11,7 +11,14 @@ const config: Config = {
     extend: {
       colors: {
         ink: '#0f2a2a',
-        'ink-light': '#3f5d5b',
+        'ink-light': '#5b7674',
+        night: {
+          900: '#051512',
+          800: '#0a1f19',
+          700: '#0f2b23',
+          600: '#15392f',
+          500: '#1c4a3c',
+        },
         teal: {
           50: '#effcf6',
           100: '#d6f7e8',
@@ -48,9 +55,15 @@ const config: Config = {
         lg: '0.75rem',
         xl: '1rem',
         '2xl': '1.25rem',
+        '3xl': '1.75rem',
       },
       boxShadow: {
-        card: '0 1px 2px 0 rgba(15, 42, 42, 0.06), 0 1px 3px 0 rgba(15, 42, 42, 0.08)',
+        card: '0 1px 2px 0 rgba(6, 30, 24, 0.05), 0 2px 8px -2px rgba(6, 30, 24, 0.08)',
+        'card-lg': '0 8px 24px -8px rgba(6, 30, 24, 0.18), 0 2px 8px -2px rgba(6, 30, 24, 0.08)',
+        glow: '0 0 0 1px rgba(63, 199, 154, 0.15), 0 8px 24px -8px rgba(21, 138, 104, 0.35)',
+      },
+      backgroundImage: {
+        'radial-fade': 'radial-gradient(circle at top right, var(--tw-gradient-stops))',
       },
     },
   },

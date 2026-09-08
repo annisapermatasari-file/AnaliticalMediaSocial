@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Bell, Menu, ChevronDown, LogOut, UserCircle } from 'lucide-react';
+import { Bell, Menu, ChevronDown, LogOut, UserCircle, Search } from 'lucide-react';
 import { useDashboardStore } from '@/src/lib/store';
 import { currentUser, tiers } from '@/src/lib/mockData';
 import type { NavKey } from '@/src/types';
@@ -22,8 +22,8 @@ export default function Header() {
   const { title, subtitle } = titles[activeNav];
 
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between border-b border-teal-100 bg-white/80 px-4 py-4 backdrop-blur sm:px-6">
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-teal-900/5 bg-white/90 px-4 py-4 backdrop-blur-md sm:px-8">
+      <div className="flex min-w-0 items-center gap-3">
         <button
           className="rounded-lg p-1.5 text-ink-light hover:bg-surface-alt lg:hidden"
           onClick={toggleSidebar}
@@ -31,19 +31,27 @@ export default function Header() {
         >
           <Menu size={22} />
         </button>
-        <div>
-          <h1 className="text-xl font-bold text-ink sm:text-2xl">{title}</h1>
+        <div className="min-w-0">
+          <h1 className="truncate text-xl font-extrabold tracking-tight text-ink sm:text-2xl">{title}</h1>
           <p className="hidden text-sm text-ink-light sm:block">{subtitle}</p>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 sm:gap-4">
+      <div className="hidden flex-1 max-w-xs items-center gap-2 rounded-full bg-surface-alt px-4 py-2 lg:flex">
+        <Search size={16} className="text-ink-light/60" />
+        <input
+          placeholder="Cari produk, transaksi..."
+          className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-light/50"
+        />
+      </div>
+
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
         <button
-          className="relative rounded-full p-2 text-ink-light hover:bg-surface-alt"
+          className="relative rounded-full p-2.5 text-ink-light hover:bg-surface-alt"
           aria-label="Notifikasi"
         >
-          <Bell size={20} />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-orange-500" />
+          <Bell size={19} />
+          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-orange-500 ring-2 ring-white" />
         </button>
 
         <div className="relative">
@@ -51,7 +59,7 @@ export default function Header() {
             onClick={() => setMenuOpen((v) => !v)}
             className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 hover:bg-surface-alt"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-500 text-sm font-semibold text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-teal-400 to-teal-600 text-sm font-semibold text-white">
               {currentUser.name.charAt(0)}
             </div>
             <span className="hidden text-sm font-medium text-ink sm:block">
@@ -61,11 +69,11 @@ export default function Header() {
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 mt-2 w-56 rounded-xl border border-teal-100 bg-white p-2 shadow-card">
-              <div className="border-b border-teal-100 px-3 py-2">
+            <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-teal-900/5 bg-white p-2 shadow-card-lg">
+              <div className="border-b border-teal-900/5 px-3 py-2">
                 <p className="text-sm font-semibold text-ink">{currentUser.name}</p>
                 <p className="truncate text-xs text-ink-light">{currentUser.email}</p>
-                <span className="mt-1 inline-block rounded-full bg-teal-100 px-2 py-0.5 text-[11px] font-semibold text-teal-700">
+                <span className="mt-1.5 inline-block rounded-full bg-teal-100 px-2 py-0.5 text-[11px] font-semibold text-teal-700">
                   {tier?.name} Reseller
                 </span>
               </div>
