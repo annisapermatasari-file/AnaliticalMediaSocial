@@ -25,7 +25,7 @@ export interface User {
   createdAt: string;
 }
 
-export type ProductCategorySlug = 'planner' | 'sticker' | 'wallpaper';
+export type ProductCategorySlug = 'planner' | 'sticker' | 'wallpaper' | 'bisnis' | 'bundle';
 
 export interface Category {
   id: number;
@@ -38,10 +38,13 @@ export interface Product {
   categoryId: number;
   title: string;
   basePrice: number;
+  /** Tailwind gradient classes, used when previewImage is not available. */
   thumbnailUrl: string;
+  /** Path to a real preview image (screenshot/mockup) of the product, if available. */
+  previewImage?: string;
   fileAssetUrl: string;
   sourceFileUrl: string | null;
-  promotionalMaterialUrl: string;
+  promotionalMaterialUrl: string | null;
   tierRequiredForSource: TierName;
 }
 

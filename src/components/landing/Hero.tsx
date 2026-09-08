@@ -16,7 +16,7 @@ export default function Hero() {
             Jadi Reseller Aset Digital, Cuan Sampai <span className="text-orange-300">50% Komisi</span>
           </h1>
           <p className="mt-4 max-w-lg text-base leading-relaxed text-teal-50/90 sm:text-lg">
-            Jual ulang Planner, Sticker, dan Wallpaper printable premium. Cukup daftar dengan Google, pilih tier,
+            Jual ulang Planner, Template Bisnis, dan Bundle Font premium. Cukup daftar dengan Google, pilih tier,
             bagikan link — komisi otomatis masuk ke dompetmu.
           </p>
 
@@ -64,8 +64,8 @@ export default function Hero() {
 
               <div className="mt-4 space-y-2">
                 {[
-                  { label: 'Minimalist 2026 Planner', amount: 'Rp 7.000', color: 'from-slate-300 to-slate-400' },
-                  { label: 'Cute Animal Stickers', amount: 'Rp 3.000', color: 'from-amber-200 to-orange-300' },
+                  { label: 'Weekly Business Stats Tracker', amount: 'Rp 7.000', color: 'from-teal-300 to-emerald-400' },
+                  { label: 'Line Sheet Catalogue', amount: 'Rp 6.400', color: 'from-rose-200 to-pink-300' },
                 ].map((item) => (
                   <div key={item.label} className="flex items-center gap-2.5 rounded-lg bg-surface p-2">
                     <div className={`h-8 w-8 shrink-0 rounded-md bg-gradient-to-br ${item.color}`} />

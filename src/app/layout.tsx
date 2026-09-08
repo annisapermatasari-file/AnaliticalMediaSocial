@@ -4,7 +4,7 @@ import AuthSessionProvider from '@/src/components/providers/AuthSessionProvider'
 
 export const metadata: Metadata = {
   title: 'AsetDigital | Platform Reseller Aset Digital',
-  description: 'Jadi reseller printable digital (Planner, Sticker, Wallpaper) dan dapatkan komisi hingga 50%.',
+  description: 'Jadi reseller aset digital (Planner, Template Bisnis, Bundle Font) dan dapatkan komisi hingga 50%.',
 };
 
 export default function RootLayout({
