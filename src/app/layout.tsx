@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Dashboard Media Sosial | Direktorat Kursus dan Pelatihan',
-  description: 'Monitoring, Analisis, dan Evaluasi Komunikasi Digital',
+  title: 'AsetDigital | Dashboard Reseller',
+  description: 'Dashboard reseller untuk platform aset digital printable (Planner, Sticker, Wallpaper).',
 };
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id">
-      <body className="bg-light-gray">
+      <body className="bg-surface">
         {children}
       </body>
     </html>

@@ -1,29 +1,22 @@
 import { create } from 'zustand';
+import type { NavKey, ProductCategorySlug } from '@/src/types';
 
 export interface DashboardStore {
-  selectedPeriod: 'today' | '7days' | '30days' | '90days' | 'ytd' | 'custom';
-  customStartDate: string | null;
-  customEndDate: string | null;
-  activePage: string;
+  activeNav: NavKey;
   sidebarOpen: boolean;
-  setPeriod: (period: DashboardStore['selectedPeriod']) => void;
-  setCustomDateRange: (startDate: string, endDate: string) => void;
-  setActivePage: (page: string) => void;
+  catalogFilter: ProductCategorySlug | 'all';
+  setActiveNav: (nav: NavKey) => void;
   toggleSidebar: () => void;
+  closeSidebar: () => void;
+  setCatalogFilter: (filter: ProductCategorySlug | 'all') => void;
 }
 
 export const useDashboardStore = create<DashboardStore>((set) => ({
-  selectedPeriod: '30days',
-  customStartDate: null,
-  customEndDate: null,
-  activePage: 'overview',
-  sidebarOpen: true,
-  setPeriod: (period) => set({ selectedPeriod: period, customStartDate: null, customEndDate: null }),
-  setCustomDateRange: (startDate, endDate) => set({ 
-    selectedPeriod: 'custom', 
-    customStartDate: startDate, 
-    customEndDate: endDate 
-  }),
-  setActivePage: (page) => set({ activePage: page }),
+  activeNav: 'dashboard',
+  sidebarOpen: false,
+  catalogFilter: 'all',
+  setActiveNav: (nav) => set({ activeNav: nav, sidebarOpen: false }),
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+  closeSidebar: () => set({ sidebarOpen: false }),
+  setCatalogFilter: (filter) => set({ catalogFilter: filter }),
 }));

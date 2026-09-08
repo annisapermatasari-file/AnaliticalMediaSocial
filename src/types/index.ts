@@ -1,71 +1,110 @@
-export interface SocialMediaMetrics {
-  followers: number;
-  followerGrowth: number;
-  reach: number;
-  impressions: number;
-  engagement: number;
-  engagementRate: number;
-  videoViews?: number;
+export type TierName = 'Bronze' | 'Silver' | 'Gold';
+
+export interface Tier {
+  id: number;
+  name: TierName;
+  price: number;
+  commissionRate: number; // e.g. 0.2 = 20%
+  recruitmentPoints: number;
+  upgradePointsRequired: number;
+  hasSourceFileAccess: boolean;
+  perks: string[];
 }
 
-export interface PlatformData {
-  instagram: SocialMediaMetrics & {
-    account: string;
-    posts: number;
-    saves: number;
-  };
-  facebook: SocialMediaMetrics & {
-    account: string;
-    likes: number;
-    comments: number;
-    shares: number;
-  };
-  youtube: SocialMediaMetrics & {
-    channel: string;
-    videos: number;
-    watchTime: number;
-    avgViewDuration: number;
-  };
-  tiktok: SocialMediaMetrics & {
-    account: string;
-    profileViews: number;
-  };
-  website: {
-    visitors: number;
-    sessions: number;
-    pageViews: number;
-    avgSessionDuration: number;
-    bounceRate: number;
-  };
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  avatarUrl?: string;
+  tierId: number;
+  referredBy: number | null;
+  referralCode: string;
+  commissionBalance: number;
+  accumulatedPoints: number;
+  totalSales: number;
+  createdAt: string;
 }
 
-export interface ContentAnalytics {
-  id: string;
-  platform: 'instagram' | 'facebook' | 'youtube' | 'tiktok' | 'website';
+export type ProductCategorySlug = 'planner' | 'sticker' | 'wallpaper';
+
+export interface Category {
+  id: number;
+  name: string;
+  slug: ProductCategorySlug;
+}
+
+export interface Product {
+  id: number;
+  categoryId: number;
   title: string;
-  contentType: string;
-  topic: string;
-  date: string;
-  reach: number;
-  impressions: number;
-  views: number;
-  likes: number;
-  comments: number;
-  shares: number;
-  saves: number;
-  engagementRate: number;
-  performanceScore: number;
+  basePrice: number;
+  thumbnailUrl: string;
+  fileAssetUrl: string;
+  sourceFileUrl: string | null;
+  promotionalMaterialUrl: string;
+  tierRequiredForSource: TierName;
 }
 
-export interface KPIData {
-  totalFollowers: number;
-  followerGrowth: number;
-  totalReach: number;
-  totalImpressions: number;
-  totalEngagement: number;
-  avgEngagementRate: number;
-  totalVideoViews: number;
-  totalContentPublished: number;
-  websiteVisitors: number;
-  websiteEngagement: number;
+export type TransactionType = 'sale' | 'recruitment';
+export type PaymentStatus = 'paid' | 'pending' | 'failed';
+
+export interface Transaction {
+  id: number;
+  transactionCode: string;
+  userId: number;
+  productId: number | null;
+  type: TransactionType;
+  amount: number;
+  commissionEarned: number;
+  paymentStatus: PaymentStatus;
+  createdAt: string;
 }
+
+export type PointLogType = 'recruitment' | 'sale' | 'bonus' | 'adjustment';
+
+export interface PointLog {
+  id: number;
+  userId: number;
+  points: number;
+  type: PointLogType;
+  description: string;
+  createdAt: string;
+}
+
+export type PayoutStatus = 'requested' | 'processing' | 'completed' | 'rejected';
+
+export interface Payout {
+  id: number;
+  userId: number;
+  amount: number;
+  bankName: string;
+  accountNumber: string;
+  status: PayoutStatus;
+  createdAt: string;
+}
+
+export interface OnboardingProgress {
+  id: number;
+  userId: number;
+  profileCompleted: boolean;
+  videoWatched: boolean;
+  materialDownloaded: boolean;
+  mayarLinkCreated: boolean;
+  firstShareDone: boolean;
+}
+
+export interface ReferredMember {
+  id: number;
+  name: string;
+  tierName: TierName;
+  joinedAt: string;
+  pointsGenerated: number;
+}
+
+export type NavKey =
+  | 'dashboard'
+  | 'catalog'
+  | 'referral'
+  | 'wallet'
+  | 'tutorial'
+  | 'help';
