@@ -3,6 +3,9 @@
 import { useMemo, useState } from 'react';
 import { Check, PlayCircle, Sparkle } from 'lucide-react';
 import { onboardingProgress as initialProgress } from '@/src/lib/mockData';
+import { useDashboardStore } from '@/src/lib/store';
+
+const guideVideoUrl = '/assets/products/tracker-social-media/video-tutorial.mp4';
 
 const steps = [
   { key: 'profileCompleted', label: 'Lengkapi Profil' },
@@ -14,6 +17,7 @@ const steps = [
 
 export default function OnboardingChecklist() {
   const [progress, setProgress] = useState(initialProgress);
+  const openVideo = useDashboardStore((s) => s.openVideo);
   const doneCount = useMemo(
     () => steps.filter((s) => progress[s.key]).length,
     [progress]
@@ -21,6 +25,11 @@ export default function OnboardingChecklist() {
 
   const toggleStep = (key: (typeof steps)[number]['key']) => {
     setProgress((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const handlePlayGuide = () => {
+    openVideo(guideVideoUrl, 'Video Panduan Jualan Dasar');
+    setProgress((prev) => ({ ...prev, videoWatched: true }));
   };
 
   return (
@@ -88,6 +97,7 @@ export default function OnboardingChecklist() {
         <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-teal-700 via-teal-800 to-night-800">
           <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-teal-400/20 blur-2xl" />
           <button
+            onClick={handlePlayGuide}
             className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-teal-700 shadow-card-lg transition-transform hover:scale-105"
             aria-label="Putar video panduan"
           >

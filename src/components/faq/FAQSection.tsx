@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { ChevronDown, MessageCircleQuestion, Send } from 'lucide-react';
 import { faqs } from '@/src/lib/mockData';
+import { useDashboardStore } from '@/src/lib/store';
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const showToast = useDashboardStore((s) => s.showToast);
 
   return (
     <div className="rounded-2xl bg-white p-5 shadow-card sm:p-6">
@@ -44,7 +46,10 @@ export default function FAQSection() {
         })}
       </div>
 
-      <button className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-700 to-teal-800 px-4 py-3.5 text-sm font-bold text-white shadow-card transition-all hover:shadow-card-lg active:scale-[0.99]">
+      <button
+        onClick={() => showToast('Link grup Telegram akan segera dibagikan oleh admin')}
+        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-700 to-teal-800 px-4 py-3.5 text-sm font-bold text-white shadow-card transition-all hover:shadow-card-lg active:scale-[0.99]"
+      >
         <Send size={16} /> Gabung Grup Telegram Komunitas
       </button>
     </div>
