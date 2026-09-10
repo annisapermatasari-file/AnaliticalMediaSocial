@@ -1,9 +1,10 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Check, Download, Filter, Image as ImageIcon, Link as LinkIcon, Paperclip } from 'lucide-react';
+import { Check, ChevronDown, Download, Filter, Image as ImageIcon, Link as LinkIcon, Paperclip } from 'lucide-react';
 import { categories, currentUser, products } from '@/src/lib/mockData';
 import { formatCurrency } from '@/src/lib/utils';
+import { useDashboardStore } from '@/src/lib/store';
 import type { Product, ProductCategorySlug } from '@/src/types';
 
 const filters: { label: string; value: ProductCategorySlug | 'all' }[] = [
@@ -11,6 +12,15 @@ const filters: { label: string; value: ProductCategorySlug | 'all' }[] = [
   { label: 'Planner', value: 'planner' },
   { label: 'Bisnis', value: 'bisnis' },
   { label: 'Bundle', value: 'bundle' },
+];
+
+type SortOption = 'default' | 'price-asc' | 'price-desc' | 'name-asc';
+
+const sortOptions: { label: string; value: SortOption }[] = [
+  { label: 'Bawaan', value: 'default' },
+  { label: 'Termurah', value: 'price-asc' },
+  { label: 'Termahal', value: 'price-desc' },
+  { label: 'Nama A-Z', value: 'name-asc' },
 ];
 
 function useAffiliateLink(product: Product) {
@@ -144,26 +154,70 @@ function ProductRow({ product }: { product: Product }) {
 
 export default function ProductCatalog({ compact = false }: { compact?: boolean }) {
   const [filter, setFilter] = useState<ProductCategorySlug | 'all'>('all');
+  const [sort, setSort] = useState<SortOption>('default');
+  const [sortOpen, setSortOpen] = useState(false);
+  const searchQuery = useDashboardStore((s) => s.searchQuery);
 
   const filteredProducts = useMemo(() => {
-    const list =
+    let list =
       filter === 'all'
         ? products
         : products.filter((p) => {
             const category = categories.find((c) => c.id === p.categoryId);
             return category?.slug === filter;
           });
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      list = list.filter((p) => p.title.toLowerCase().includes(q));
+    }
+
+    list = [...list];
+    if (sort === 'price-asc') list.sort((a, b) => a.basePrice - b.basePrice);
+    if (sort === 'price-desc') list.sort((a, b) => b.basePrice - a.basePrice);
+    if (sort === 'name-asc') list.sort((a, b) => a.title.localeCompare(b.title));
+
     return compact ? list.slice(0, 3) : list;
-  }, [filter, compact]);
+  }, [filter, compact, sort, searchQuery]);
 
   return (
     <div className="rounded-2xl bg-white p-5 shadow-card sm:p-6">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-base font-bold text-ink sm:text-lg">Katalog Produk Printable</h3>
-        <button className="flex items-center gap-1.5 rounded-lg border border-teal-900/10 px-3 py-1.5 text-xs font-semibold text-ink-light hover:bg-surface-alt">
-          <Filter size={14} /> Filter
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setSortOpen((v) => !v)}
+            className="flex items-center gap-1.5 rounded-lg border border-teal-900/10 px-3 py-1.5 text-xs font-semibold text-ink-light hover:bg-surface-alt"
+          >
+            <Filter size={14} /> {sortOptions.find((o) => o.value === sort)?.label}
+            <ChevronDown size={12} className={sortOpen ? 'rotate-180 transition-transform' : 'transition-transform'} />
+          </button>
+          {sortOpen && (
+            <div className="absolute right-0 z-10 mt-1.5 w-40 overflow-hidden rounded-xl border border-teal-900/5 bg-white p-1 shadow-card-lg">
+              {sortOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => {
+                    setSort(option.value);
+                    setSortOpen(false);
+                  }}
+                  className={`block w-full rounded-lg px-3 py-2 text-left text-xs font-semibold ${
+                    sort === option.value ? 'bg-teal-50 text-teal-700' : 'text-ink-light hover:bg-surface-alt'
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+
+      {searchQuery.trim() && (
+        <p className="mb-3 text-xs font-medium text-ink-light">
+          Hasil pencarian untuk <span className="font-bold text-ink">&ldquo;{searchQuery}&rdquo;</span> ({filteredProducts.length} produk)
+        </p>
+      )}
 
       <div className="mb-4 flex gap-1 overflow-x-auto rounded-xl bg-surface-alt p-1">
         {filters.map(({ label, value }) => (

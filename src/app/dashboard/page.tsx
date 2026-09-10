@@ -8,6 +8,9 @@ import ReferralPage from '@/src/components/referral/ReferralPage';
 import WalletPage from '@/src/components/wallet/WalletPage';
 import TutorialPage from '@/src/components/tutorial/TutorialPage';
 import FAQSection from '@/src/components/faq/FAQSection';
+import Toast from '@/src/components/ui/Toast';
+import VideoModal from '@/src/components/ui/VideoModal';
+import ProfileModal from '@/src/components/ui/ProfileModal';
 import { useDashboardStore } from '@/src/lib/store';
 
 export default function DashboardPage() {
@@ -27,6 +30,9 @@ export default function DashboardPage() {
           {activeNav === 'help' && <FAQSection />}
         </main>
       </div>
+      <Toast />
+      <VideoModal />
+      <ProfileModal />
     </div>
   );
 }
