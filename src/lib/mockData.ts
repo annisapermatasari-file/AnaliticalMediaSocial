@@ -120,6 +120,17 @@ export const products: Product[] = [
     promotionalMaterialUrl: null,
     tierRequiredForSource: 'Gold',
   },
+  {
+    id: 6,
+    categoryId: 3,
+    title: 'The Everyday Digital Planner Bundle',
+    basePrice: 99000,
+    thumbnailUrl: 'from-slate-700 to-blue-900',
+    fileAssetUrl: '/assets/products/everyday-planner-bundle/everyday-digital-planner-bundle.zip',
+    sourceFileUrl: null,
+    promotionalMaterialUrl: null,
+    tierRequiredForSource: 'Gold',
+  },
 ];
 
 export const transactions: Transaction[] = [
