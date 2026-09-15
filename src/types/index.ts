@@ -25,7 +25,7 @@ export interface User {
   createdAt: string;
 }
 
-export type ProductCategorySlug = 'planner' | 'sticker' | 'wallpaper' | 'bisnis' | 'bundle';
+export type ProductCategorySlug = 'planner' | 'sticker' | 'wallpaper' | 'bisnis' | 'bundle' | 'edukasi';
 
 export interface Category {
   id: number;

@@ -12,6 +12,7 @@ const filters: { label: string; value: ProductCategorySlug | 'all' }[] = [
   { label: 'Planner', value: 'planner' },
   { label: 'Bisnis', value: 'bisnis' },
   { label: 'Bundle', value: 'bundle' },
+  { label: 'Edukasi Anak', value: 'edukasi' },
 ];
 
 type SortOption = 'default' | 'price-asc' | 'price-desc' | 'name-asc';

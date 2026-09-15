@@ -61,6 +61,7 @@ export const categories: Category[] = [
   { id: 1, name: 'Planner', slug: 'planner' },
   { id: 2, name: 'Bisnis', slug: 'bisnis' },
   { id: 3, name: 'Bundle', slug: 'bundle' },
+  { id: 4, name: 'Edukasi Anak', slug: 'edukasi' },
 ];
 
 export const products: Product[] = [
@@ -127,6 +128,18 @@ export const products: Product[] = [
     basePrice: 99000,
     thumbnailUrl: 'from-slate-700 to-blue-900',
     fileAssetUrl: '/assets/products/everyday-planner-bundle/everyday-digital-planner-bundle.zip',
+    sourceFileUrl: null,
+    promotionalMaterialUrl: null,
+    tierRequiredForSource: 'Gold',
+  },
+  {
+    id: 7,
+    categoryId: 4,
+    title: 'Counting Worksheet Bundle (20 Halaman)',
+    basePrice: 19000,
+    thumbnailUrl: 'from-cyan-200 to-sky-300',
+    previewImage: '/assets/previews/counting-worksheet.png',
+    fileAssetUrl: '/assets/products/counting-worksheet/counting-worksheet-bundle.zip',
     sourceFileUrl: null,
     promotionalMaterialUrl: null,
     tierRequiredForSource: 'Gold',
