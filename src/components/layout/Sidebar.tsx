@@ -1,5 +1,6 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
 import {
   LayoutDashboard,
   Package,
@@ -26,7 +27,10 @@ const navItems: { key: NavKey; label: string; icon: typeof LayoutDashboard }[] =
 
 export default function Sidebar() {
   const { activeNav, setActiveNav, sidebarOpen, closeSidebar } = useDashboardStore();
+  const { data: session } = useSession();
   const tier = tiers.find((t) => t.id === currentUser.tierId);
+  const displayName = session?.user?.name ?? currentUser.name;
+  const avatarImage = session?.user?.image ?? undefined;
 
   return (
     <>
@@ -86,11 +90,16 @@ export default function Sidebar() {
 
         <div className="m-4 overflow-hidden rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-300 to-orange-500 text-base font-bold text-white shadow-card">
-              {currentUser.name.charAt(0)}
-            </div>
+            {avatarImage ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={avatarImage} alt={displayName} className="h-11 w-11 shrink-0 rounded-full object-cover shadow-card" />
+            ) : (
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-300 to-orange-500 text-base font-bold text-white shadow-card">
+                {displayName.charAt(0)}
+              </div>
+            )}
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-white">{currentUser.name}</p>
+              <p className="truncate text-sm font-semibold text-white">{displayName}</p>
               <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-teal-400/15 px-2 py-0.5 text-[11px] font-semibold text-teal-300">
                 <Sparkles size={10} /> {tier?.name} Reseller
               </span>

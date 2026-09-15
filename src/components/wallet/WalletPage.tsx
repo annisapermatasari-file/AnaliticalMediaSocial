@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { CircleDollarSign, Sparkles, Send } from 'lucide-react';
-import { currentUser, payouts, pointLogs, transactions } from '@/src/lib/mockData';
+import { currentUser, payouts as initialPayouts, pointLogs, transactions } from '@/src/lib/mockData';
 import { formatCurrency, formatDateTime, formatNumber } from '@/src/lib/utils';
-import type { PayoutStatus } from '@/src/types';
+import { useDashboardStore } from '@/src/lib/store';
+import type { Payout, PayoutStatus } from '@/src/types';
 
 const statusStyles: Record<PayoutStatus, string> = {
   requested: 'bg-orange-100 text-orange-600',
@@ -23,14 +24,34 @@ export default function WalletPage() {
   const [amount, setAmount] = useState('');
   const [bankName, setBankName] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [payoutList, setPayoutList] = useState<Payout[]>(initialPayouts);
+  const showToast = useDashboardStore((s) => s.showToast);
 
   const totalPoints = pointLogs.reduce((sum, log) => sum + log.points, 0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 2500);
+    const numericAmount = Number(amount);
+
+    if (numericAmount > currentUser.commissionBalance) {
+      setFormError(`Saldo tidak cukup. Saldo kamu ${formatCurrency(currentUser.commissionBalance)}.`);
+      return;
+    }
+
+    const newPayout: Payout = {
+      id: Date.now(),
+      userId: currentUser.id,
+      amount: numericAmount,
+      bankName,
+      accountNumber,
+      status: 'requested',
+      createdAt: new Date().toISOString(),
+    };
+
+    setPayoutList((prev) => [newPayout, ...prev]);
+    setFormError(null);
+    showToast(`Pengajuan pencairan ${formatCurrency(numericAmount)} berhasil dikirim!`);
     setAmount('');
     setBankName('');
     setAccountNumber('');
@@ -139,10 +160,8 @@ export default function WalletPage() {
           >
             <Send size={15} /> Ajukan Sekarang
           </button>
-          {submitted && (
-            <p className="text-center text-xs font-medium text-teal-600">
-              Pengajuan pencairan berhasil dikirim!
-            </p>
+          {formError && (
+            <p className="text-center text-xs font-medium text-red-600">{formError}</p>
           )}
         </form>
       </div>
@@ -160,7 +179,7 @@ export default function WalletPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-teal-50">
-              {payouts.map((payout) => (
+              {payoutList.map((payout) => (
                 <tr key={payout.id}>
                   <td className="py-2.5 pr-3 text-ink-light">{formatDateTime(payout.createdAt)}</td>
                   <td className="py-2.5 pr-3 font-medium text-ink">{formatCurrency(payout.amount)}</td>

@@ -1,32 +1,23 @@
-'use client';
+import Navbar from '@/src/components/landing/Navbar';
+import Hero from '@/src/components/landing/Hero';
+import FeatureGrid from '@/src/components/landing/FeatureGrid';
+import HowItWorks from '@/src/components/landing/HowItWorks';
+import TierPricing from '@/src/components/landing/TierPricing';
+import LandingFaq from '@/src/components/landing/LandingFaq';
+import CtaBanner from '@/src/components/landing/CtaBanner';
+import Footer from '@/src/components/landing/Footer';
 
-import Sidebar from '@/src/components/layout/Sidebar';
-import Header from '@/src/components/layout/Header';
-import DashboardHome from '@/src/components/dashboard/DashboardHome';
-import ProductCatalog from '@/src/components/catalog/ProductCatalog';
-import ReferralPage from '@/src/components/referral/ReferralPage';
-import WalletPage from '@/src/components/wallet/WalletPage';
-import TutorialPage from '@/src/components/tutorial/TutorialPage';
-import FAQSection from '@/src/components/faq/FAQSection';
-import { useDashboardStore } from '@/src/lib/store';
-
-export default function Home() {
-  const activeNav = useDashboardStore((s) => s.activeNav);
-
+export default function LandingPage() {
   return (
-    <div className="flex min-h-screen bg-surface">
-      <Sidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <Header />
-        <main className="flex-1 p-4 sm:p-6">
-          {activeNav === 'dashboard' && <DashboardHome />}
-          {activeNav === 'catalog' && <ProductCatalog />}
-          {activeNav === 'referral' && <ReferralPage />}
-          {activeNav === 'wallet' && <WalletPage />}
-          {activeNav === 'tutorial' && <TutorialPage />}
-          {activeNav === 'help' && <FAQSection />}
-        </main>
-      </div>
+    <div className="min-h-screen bg-surface">
+      <Navbar />
+      <Hero />
+      <FeatureGrid />
+      <HowItWorks />
+      <TierPricing />
+      <LandingFaq />
+      <CtaBanner />
+      <Footer />
     </div>
   );
 }

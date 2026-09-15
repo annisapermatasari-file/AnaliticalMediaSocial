@@ -1,8 +1,12 @@
+'use client';
+
 import { ArrowRight, PencilLine } from 'lucide-react';
 import { currentUser } from '@/src/lib/mockData';
+import { useDashboardStore } from '@/src/lib/store';
 
 export default function WelcomeBanner() {
   const firstName = currentUser.name.split(' ')[0];
+  const setActiveNav = useDashboardStore((s) => s.setActiveNav);
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-800 via-teal-700 to-teal-600 p-6 sm:p-9">
       <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-mint/20 blur-3xl" />
@@ -20,7 +24,10 @@ export default function WelcomeBanner() {
             Ayo mulai berjualan hari ini — kamu tinggal selangkah lagi menuju target bulan ini.
           </p>
         </div>
-        <button className="group flex shrink-0 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-teal-700 shadow-card-lg transition-transform hover:-translate-y-0.5">
+        <button
+          onClick={() => setActiveNav('catalog')}
+          className="group flex shrink-0 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-teal-700 shadow-card-lg transition-transform hover:-translate-y-0.5"
+        >
           Mulai Jualan
           <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
         </button>
